@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Школьный Краудсорсинг</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: var(--accent);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-buttons button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .auth-buttons button:hover {
+            transform: translateY(-3px);
+        }
+        
+        /* Hero section */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.7)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: var(--dark);
+        }
+        
+        .cta-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .cta-button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Основной контент */
+        main {
+            padding: 3rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--secondary);
+            font-size: 2.5rem;
+        }
+        
+        /* Идеи */
+        .ideas-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 3rem;
+        }
+        
+        .idea-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+        
+        .idea-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .idea-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .idea-title {
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .idea-author {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .idea-content {
+            padding: 20px;
+        }
+        
+        .idea-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        
+        .vote-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .vote-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .votes {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        /* Форма добавления идеи */
+        .add-idea-form {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        /* Футер */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+        
+        .close-modal:hover {
+            color: var(--dark);
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .ideas-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-lightbulb"></i>
+                <span>Школьный Краудсорсинг</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">Главная</a></li>
+                    <li><a href="#ideas">Идеи</a></li>
+                    <li><a href="#add">Предложить идею</a></li>
+                    <li><a href="#about">О проекте</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button id="loginBtn">Войти</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Главный баннер -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Создаём школу будущего вместе!</h1>
+            <p>Платформа для сбора идей от учеников, учителей и родителей. Предлагайте улучшения для школы, голосуйте за лучшие идеи и помогайте реализовывать их.</p>
+            <a href="#add" class="cta-button">Предложить свою идею</a>
+        </div>
+    </section>
+
+    <!-- Основной контент -->
+    <main class="container">
+        <h2 class="section-title" id="ideas">Последние идеи</h2>
+        
+        <!-- Контейнер для идей -->
+        <div class="ideas-container" id="ideasContainer">
+            <!-- Идеи будут загружаться здесь -->
+        </div>
+        
+        <h2 class="section-title" id="add">Предложить новую идею</h2>
+        
+        <!-- Форма добавления идеи -->
+        <form class="add-idea-form" id="ideaForm">
+            <div class="form-group">
+                <label for="ideaTitle">Заголовок идеи</label>
+                <input type="text" id="ideaTitle" class="form-control" placeholder="Например: Установить солнечные батареи на крыше школы" required>
+            </div>
+            <div class="form-group">
+                <label for="ideaAuthor">Ваше имя</label>
+                <input type="text" id="ideaAuthor" class="form-control" placeholder="Представитесь, пожалуйста" required>
+            </div>
+            <div class="form-group">
+                <label for="ideaDescription">Подробное описание</label>
+                <textarea id="ideaDescription" class="form-control" placeholder="Опишите свою идею подробно. В чём её польза? Как её можно реализовать?" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Опубликовать идею</button>
+        </form>
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-lightbulb"></i> Школьный Краудсорсинг
+            </div>
+            <p>Платформа для сбора идей и улучшения школы. Открыт для всех участников учебного процесса.</p>
+            <p>© 2023 Школьный Краудсорсинг. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Модальное окно входа -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeLoginModal">&times;</span>
+            <h2 style="color: var(--secondary); margin-bottom: 20px;">Вход в систему</h2>
+            <p style="margin-bottom: 20px;">Для участия в краудсорсинге просто представьтесь. Регистрация не требуется.</p>
+            <div class="form-group">
+                <label for="userName">Ваше имя</label>
+                <input type="text" id="userName" class="form-control" placeholder="Введите ваше имя">
+            </div>
+            <button id="saveUserName" class="submit-btn" style="margin-top: 20px;">Сохранить имя</button>
+        </div>
+    </div>
+
+    <!-- Подключаем Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Инициализация Supabase (бесплатный бэкенд)
+        // ЗАМЕНИТЕ эти ключи на свои из supabase.com
+        const SUPABASE_URL = 'https://your-project.supabase.co';
+        const SUPABASE_ANON_KEY = 'your-anon-key';
+        
+        // Для демо-версии будем использовать локальное хранилище
+        // В реальном проекте замените на настоящие ключи Supabase
+        let supabase;
+        
+        // Инициализация приложения
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем, подключен ли Supabase
+            if (SUPABASE_URL.includes('your-project')) {
+                // Используем localStorage как fallback для демо
+                console.log('Используется локальное хранилище для демо. В реальном проекте подключите Supabase.');
+                initAppWithLocalStorage();
+            } else {
+                // Инициализируем Supabase
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                initAppWithSupabase();
+            }
+            
+            // Загружаем идеи
+            loadIdeas();
+            
+            // Обработчики событий
+            setupEventListeners();
+            
+            // Проверяем, есть ли сохраненное имя пользователя
+            checkUser();
+        });
+        
+        // Инициализация с локальным хранилищем (для демо)
+        function initAppWithLocalStorage() {
+            // Проверяем, есть ли идеи в localStorage
+            if (!localStorage.getItem('crowdIdeas')) {
+                // Добавляем демо-идеи
+                const demoIdeas = [
+                    {
+                        id: 1,
+                        title: "Создание школьного сада",
+                        author: "Мария Иванова, 10А",
+                        description: "Предлагаю создать школьный сад с овощами и цветами. Ученики смогут ухаживать за растениями на уроках биологии, а урожай использовать в столовой.",
+                        votes: 24,
+                        date: "2023-10-15"
+                    },
+                    {
+                        id: 2,
+                        title: "Дни обмена книгами",
+                        author: "Алексей Петров, 9Б",
+                        description: "Организовать ежемесячный день обмена книгами в школьной библиотеке. Ученики смогут приносить прочитанные книги и обмениваться ими.",
+                        votes: 18,
+                        date: "2023-10-10"
+                    },
+                    {
+                        id: 3,
+                        title: "Школьное радио",
+                        author: "Учитель музыки Сидорова О.П.",
+                        description: "Создать школьное радио, которое будет вещать на переменах. Ученики смогут предлагать музыку, новости школы, объявления.",
+                        votes: 31,
+                        date: "2023-10-05"
+                    }
+                ];
+                localStorage.setItem('crowdIdeas', JSON.stringify(demoIdeas));
+            }
+        }
+        
+        // Инициализация с Supabase
+        function initAppWithSupabase() {
+            console.log('Supabase подключен');
+        }
+        
+        // Загрузка идей
+        async function loadIdeas() {
+            const ideasContainer = document.getElementById('ideasContainer');
+            
+            // Показываем загрузку
+            ideasContainer.innerHTML = '<div style="text-align: center; width: 100%; padding: 40px; color: var(--secondary);"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Загрузка идей...</p></div>';
+            
+            let ideas = [];
+            
+            // Если подключен Supabase
+            if (supabase) {
+                const { data, error } = await supabase
+                    .from('ideas')
+                    .select('*')
+                    .order('votes', { ascending: false });
+                    
+                if (!error) {
+                    ideas = data;
+                }
+            } else {
+                // Иначе берем из localStorage
+                ideas = JSON.parse(localStorage.getItem('crowdIdeas')) || [];
+            }
+            
+            // Отображаем идеи
+            displayIdeas(ideas);
+        }
+        
+        // Отображение идей
+        function displayIdeas(ideas) {
+            const ideasContainer = document.getElementById('ideasContainer');
+            
+            if (ideas.length === 0) {
+                ideasContainer.innerHTML = '<div style="text-align: center; width: 100%; padding: 40px; color: var(--secondary);"><p>Пока нет идей. Будьте первым, кто предложит улучшение для школы!</p></div>';
+                return;
+            }
+            
+            let ideasHTML = '';
+            
+            ideas.forEach(idea => {
+                ideasHTML += `
+                <div class="idea-card" data-id="${idea.id}">
+                    <div class="idea-header">
+                        <h3 class="idea-title">${idea.title}</h3>
+                        <div class="idea-author">${idea.author} • ${idea.date || 'Недавно'}</div>
+                    </div>
+                    <div class="idea-content">
+                        <p>${idea.description}</p>
+                    </div>
+                    <div class="idea-stats">
+                        <button class="vote-btn" onclick="voteForIdea(${idea.id})">
+                            <i class="fas fa-thumbs-up"></i> Поддержать
+                        </button>
+                        <div class="votes">
+                            <i class="fas fa-heart" style="color: var(--accent);"></i>
+                            <span>${idea.votes} голосов</span>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+            
+            ideasContainer.innerHTML = ideasHTML;
+        }
+        
+        // Голосование за идею
+        async function voteForIdea(ideaId) {
+            const userName = localStorage.getItem('crowdUserName');
+            
+            if (!userName) {
+                alert('Пожалуйста, представьтесь, прежде чем голосовать');
+                document.getElementById('loginBtn').click();
+                return;
+            }
+            
+            // Проверяем, голосовал ли уже пользователь
+            const votedIdeas = JSON.parse(localStorage.getItem('votedIdeas') || '{}');
+            
+            if (votedIdeas[ideaId]) {
+                alert('Вы уже голосовали за эту идею!');
+                return;
+            }
+            
+            // Если подключен Supabase
+            if (supabase) {
+                // Получаем текущее количество голосов
+                const { data: ideaData } = await supabase
+                    .from('ideas')
+                    .select('votes')
+                    .eq('id', ideaId)
+                    .single();
+                    
+                if (ideaData) {
+                    // Обновляем количество голосов
+                    const { error } = await supabase
+                        .from('ideas')
+                        .update({ votes: ideaData.votes + 1 })
+                        .eq('id', ideaId);
+                        
+                    if (!error) {
+                        // Сохраняем информацию о голосовании
+                        votedIdeas[ideaId] = true;
+                        localStorage.setItem('votedIdeas', JSON.stringify(votedIdeas));
+                        
+                        // Обновляем отображение
+                        loadIdeas();
+                    }
+                }
+            } else {
+                // Иначе обновляем в localStorage
+                let ideas = JSON.parse(localStorage.getItem('crowdIdeas')) || [];
+                const ideaIndex = ideas.findIndex(idea => idea.id === ideaId);
+                
+                if (ideaIndex !== -1) {
+                    ideas[ideaIndex].votes += 1;
+                    localStorage.setItem('crowdIdeas', JSON.stringify(ideas));
+                    
+                    // Сохраняем информацию о голосовании
+                    votedIdeas[ideaId] = true;
+                    localStorage.setItem('votedIdeas', JSON.stringify(votedIdeas));
+                    
+                    // Обновляем отображение
+                    displayIdeas(ideas);
+                }
+            }
+        }
+        
+        // Обработка формы добавления идеи
+        document.getElementById('ideaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('ideaTitle').value;
+            const author = document.getElementById('ideaAuthor').value;
+            const description = document.getElementById('ideaDescription').value;
+            
+            const userName = localStorage.getItem('crowdUserName');
+            
+            if (!userName) {
+                alert('Пожалуйста, представьтесь, прежде чем предлагать идеи');
+                document.getElementById('loginBtn').click();
+                return;
+            }
+            
+            // Создаем новую идею
+            const newIdea = {
+                title: title,
+                author: author,
+                description: description,
+                votes: 0,
+                date: new Date().toISOString().split('T')[0] // Только дата
+            };
+            
+            // Если подключен Supabase
+            if (supabase) {
+                const { data, error } = await supabase
+                    .from('ideas')
+                    .insert([newIdea]);
+                    
+                if (!error) {
+                    alert('Идея успешно опубликована!');
+                    // Очищаем форму
+                    document.getElementById('ideaForm').reset();
+                    // Обновляем список идей
+                    loadIdeas();
+                }
+            } else {
+                // Иначе сохраняем в localStorage
+                let ideas = JSON.parse(localStorage.getItem('crowdIdeas')) || [];
+                // Генерируем ID
+                newIdea.id = ideas.length > 0 ? Math.max(...ideas.map(i => i.id)) + 1 : 1;
+                ideas.push(newIdea);
+                localStorage.setItem('crowdIdeas', JSON.stringify(ideas));
+                
+                alert('Идея успешно опубликована!');
+                // Очищаем форму
+                document.getElementById('ideaForm').reset();
+                // Обновляем список идей
+                displayIdeas(ideas);
+            }
+        });
+        
+        // Проверка пользователя
+        function checkUser() {
+            const userName = localStorage.getItem('crowdUserName');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (userName) {
+                loginBtn.textContent = userName;
+                loginBtn.innerHTML = `<i class="fas fa-user"></i> ${userName}`;
+            }
+        }
+        
+        // Настройка обработчиков событий
+        function setupEventListeners() {
+            // Кнопка входа
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                document.getElementById('loginModal').style.display = 'flex';
+            });
+            
+            // Закрытие модального окна
+            document.getElementById('closeLoginModal').addEventListener('click', function() {
+                document.getElementById('loginModal').style.display = 'none';
+            });
+            
+            // Сохранение имени пользователя
+            document.getElementById('saveUserName').addEventListener('click', function() {
+                const userName = document.getElementById('userName').value;
+                
+                if (userName.trim()) {
+                    localStorage.setItem('crowdUserName', userName.trim());
+                    document.getElementById('loginModal').style.display = 'none';
+                    checkUser();
+                    alert(`Привет, ${userName}! Теперь вы можете предлагать идеи и голосовать.`);
+                } else {
+                    alert('Пожалуйста, введите ваше имя');
+                }
+            });
+            
+            // Закрытие модального окна при клике вне его
+            window.addEventListener('click', function(e) {
+                if (e.target === document.getElementById('loginModal')) {
+                    document.getElementById('loginModal').style.display = 'none';
+                }
+            });
+            
+            // Плавная прокрутка по ссылкам
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                        
+                        // Обновляем активную ссылку
+                        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
